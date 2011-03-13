@@ -26,6 +26,12 @@ public class ListManager {
 	 */
 	public ListManager() {
 		list = new ArrayList<VoteItem>();
+		fileSync();
+	}
+	
+	public ListManager(boolean readFromFile) {
+		list = new ArrayList<VoteItem>();
+		listSync();
 	}
 	
 	/*
@@ -35,8 +41,11 @@ public class ListManager {
 	public ListManager(VoteItem [] list) {
 		this.list = new ArrayList<VoteItem>(list.length);
 		for(int i=0;i<list.length;i++){
-			this.list.add(list[i]);
+			if(list[i]!=null) {
+				this.list.add(list[i]);
+			}
 		}
+		fileSync();
 	}
 	
 	/*
@@ -49,8 +58,8 @@ public class ListManager {
 			for(int i=0;i<list.size();i++) {
 				writer.write(list.get(i).name);
 				writer.newLine();
-				writer.close();
 			}
+			writer.close();
 		}
 		catch(IOException e) {
 			return false;
@@ -71,6 +80,7 @@ public class ListManager {
 			while(s.hasNextLine()) {
 				list.add(new VoteItem(s.nextLine()));
 			}
+			s.close();
 		}
 		catch(FileNotFoundException e) {
 			return false;
@@ -84,8 +94,9 @@ public class ListManager {
 	 */
 	public boolean add(String s) {
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE, true));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE,true));
 			writer.write(s);
+			writer.newLine();
 			writer.close();
 		}
 		catch(IOException e) {
