@@ -13,16 +13,16 @@ class UserThread extends Thread {
 	ServerSocket ss;
 	PrintWriter out;
 	BufferedReader in;
-	VoteItem ballot[];
 	ThreadGroup children;
 	Date lastChanged;
+	ListManager list;
 	
 	//will need to add global elements from Server class as they are added
-	UserThread(Socket connection, ServerSocket ss, VoteItem ballot[], Date update){
+	UserThread(Socket connection, ServerSocket ss, Date update,ListManager list){
 		this.connection = connection;
 		this.ss = ss;
-		this.ballot = ballot;
 		this.lastChanged = update;
+		this.list=list;
 	}
 	
 	public void run(){
@@ -83,10 +83,10 @@ class UserThread extends Thread {
 		
 		int i;		
 		if(message[0].equals("GET")){
-			for(i = 0; i < (ballot.length-1); i++)
+			for(i = 0; i < (list.getListSize()); i++)
 			{
-				if(ballot[i] != null)
-					sendMessage(ballot[i].name);
+				if(list.get(i) != null)
+					sendMessage(list.get(i).name);
 				//System.out.println(ballot[i].name);
 			}
 			sendMessage("END");
@@ -104,24 +104,14 @@ class UserThread extends Thread {
 			sendMessage("END");
 		}
 		else if(message[0].equals("VOTE")){
-			boolean check = false;
 			sendMessage("END");
-			for(i = 0; i < ballot.length && check == false; i++)
-			{
-				if(ballot[i] != null){
-					if(ballot[i].name.equals(message[1]))
-					{
-						check = true;
-						ballot[i].vote++;
-					}
-				}
-			}
+			list.vote(message[1]);
 		} 
 		else if(message[0].equals("GETCOUNT")){
-			for(i = 0; i < (ballot.length); i++)
+			for(i = 0; i < (list.getListSize()); i++)
 			{
-				if(ballot[i] != null)
-					sendMessage(ballot[i].name + ": " + ballot[i].vote);
+				if(list.get(i) != null)
+					sendMessage(list.get(i).name + ": " + list.get(i).vote);
 			}
 			sendMessage("END");
 		}

@@ -1,20 +1,37 @@
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
 public class Server{
 	ServerSocket providerSocket;
 	Socket connection = null;
 	Date lastChanged = new Date();
+	ListManager list;
 	
 	//should also include anything that needs to be centralized (vote counts etc.)
 	//need another thread to maintain half-life decay of votes when something is being voted on
 	VoteItem shows[] = new VoteItem[20];
 
 	
-	Server() {}
+	Server() {
+		list = new ListManager();
+	}
 	void run()
 	{
+		//add initial channels to the line up
+		list.add("Discovery");
+		list.add("Lifetime");
+		list.add("Fox News");
+		list.add("Comedy Central");
+		list.add("CNN");
+		list.add("History");
+		list.add("ESPN");
+		list.add("ESPN 2");
+		list.add("Big Ten Network");
+		list.add("Spike");
+		list.add("WTHR 13");
+		list.add("WISHTV 8");
+		
 		shows[0] = new VoteItem("Simpsons");
 		shows[1] = new VoteItem("Family Guy");
 		shows[2] = new VoteItem("Scrubs");
@@ -55,7 +72,7 @@ public class Server{
 			
 			while(true){
 				connection = providerSocket.accept();
-				UserThread usr = new UserThread(connection, providerSocket, shows, lastChanged);
+				UserThread usr = new UserThread(connection, providerSocket, lastChanged,list);
 				usr.start();
 			}
 		}

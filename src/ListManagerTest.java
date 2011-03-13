@@ -97,7 +97,6 @@ public class ListManagerTest {
 	public void testListSync(){
 		ListManager lm = new ListManager();
 		try {
-			Scanner s;
 			BufferedWriter writer=new BufferedWriter(new FileWriter("ListItems.txt",true));
 			writer.write("Garbage 1\n");
 			writer.write("stuff 2\n");

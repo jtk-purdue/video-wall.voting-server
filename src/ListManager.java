@@ -164,4 +164,13 @@ public class ListManager {
 		return list.size();
 	}
 	
+	public boolean vote(String s) {
+		int index=find(s);
+		if(index!=-1) {
+			list.get(index).vote++;
+			return true;
+		}
+		return false;
+	}
+	
 }
