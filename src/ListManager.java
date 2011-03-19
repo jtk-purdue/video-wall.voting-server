@@ -30,6 +30,7 @@ public class ListManager {
 	}
 	
 	public ListManager(boolean readFromFile) {
+		System.out.println("reading from file");
 		list = new ArrayList<VoteItem>();
 		listSync();
 	}
@@ -69,20 +70,26 @@ public class ListManager {
 	
 	/*
 	 * writes the data in the file into the ArrayList
-	 * NOTE: removes all vote values
-	 * TODO: Write a smart function that does not completely rewrite the array list
+	 * only adds an element to the ArrayList if there is no item
+	 * with the same name already in the list
+	 * 
+	 * TODO: maybe find a better way of checking against list
 	 */
 	public boolean listSync() {
 		File f=new File(FILE);
+		String tmp;
 		try{
 			Scanner s=new Scanner(f);
-			list=new ArrayList<VoteItem>();
+			//list=new ArrayList<VoteItem>();
 			while(s.hasNextLine()) {
+				tmp = s.nextLine();
 				list.add(new VoteItem(s.nextLine()));
+				System.out.println("here");
 			}
 			s.close();
 		}
 		catch(FileNotFoundException e) {
+			System.out.println("error");
 			return false;
 		}
 		return true;
@@ -90,10 +97,12 @@ public class ListManager {
 	}
 	
 	/*
-	 * adds a VoteItem to the list with s as the name
+	 * adds a VoteItem to the list with s as the name as long as there
+	 * is no item already with the same name
 	 */
 	public boolean add(String s) {
 		try{
+			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE,true));
 			writer.write(s);
 			writer.newLine();
@@ -102,7 +111,8 @@ public class ListManager {
 		catch(IOException e) {
 			return false;
 		}
-		list.add(new VoteItem(s));
+		if(find(s) == -1)
+			list.add(new VoteItem(s));
 		return true;
 	}
 	

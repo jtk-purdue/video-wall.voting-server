@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,13 +17,15 @@ class UserThread extends Thread {
 	ThreadGroup children;
 	Date lastChanged;
 	ListManager list;
+	Brodcaster brodcast;
 	
 	//will need to add global elements from Server class as they are added
-	UserThread(Socket connection, ServerSocket ss, Date update,ListManager list){
+	UserThread(Socket connection, ServerSocket ss, Date update,ListManager list, Brodcaster brodcast){
 		this.connection = connection;
 		this.ss = ss;
 		this.lastChanged = update;
 		this.list=list;
+		this.brodcast = brodcast;
 	}
 	
 	public void run(){
@@ -80,9 +83,10 @@ class UserThread extends Thread {
 	{
 		//handle different commands
 			//vote, audio, video...
-		
+		System.out.println("check");
 		int i;		
 		if(message[0].equals("GET")){
+			System.out.println("check1");
 			for(i = 0; i < (list.getListSize()); i++)
 			{
 				if(list.get(i) != null)
@@ -114,6 +118,19 @@ class UserThread extends Thread {
 					sendMessage(list.get(i).name + ": " + list.get(i).vote);
 			}
 			sendMessage("END");
+		}
+		else if(message[0].equals("TRIGGER")){
+			try{
+				sendMessage("END");
+				brodcast.sendAll(message[2]);
+			}catch(Exception e){}
+		}
+		else if(message[0].equals("ONETRIG")){
+			try{
+				sendMessage("END");
+				URL url = new URL(message[1]);
+				brodcast.sendOne(url,message[2]);
+			}catch(Exception e){}
 		}
 		else {
 			sendMessage("END");
