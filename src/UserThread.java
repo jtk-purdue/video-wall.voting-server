@@ -86,7 +86,6 @@ class UserThread extends Thread {
 		System.out.println("check");
 		int i;		
 		if(message[0].equals("GET")){
-			System.out.println("check1");
 			for(i = 0; i < (list.getListSize()); i++)
 			{
 				if(list.get(i) != null)
@@ -111,7 +110,7 @@ class UserThread extends Thread {
 			sendMessage("END");
 			list.vote(message[1]);
 		} 
-		else if(message[0].equals("GETCOUNT")){
+		else if(message[0].equals("GETLIST")){
 			for(i = 0; i < (list.getListSize()); i++)
 			{
 				if(list.get(i) != null)
@@ -132,10 +131,23 @@ class UserThread extends Thread {
 				brodcast.sendOne(url,message[2]);
 			}catch(Exception e){}
 		}
+		else if(message[0].equals("GETCOUNT")){
+			alphaNumbers();
+			sendMessage("END");
+		}
 		else {
 			sendMessage("END");
 		}
 		
 			
+	}
+	
+	void alphaNumbers()
+	{
+		for(int i = 0; i < list.getListSize(); i++)
+		{
+			sendMessage(list.getAlpha(i));
+		}
+		
 	}
 }

@@ -9,6 +9,7 @@ public class Server{
 	ListManager list;
 	Brodcaster brodcast;
 	voteThread voteT;
+	VoteItem voteList[];
 	Server() {
 		list = new ListManager();
 		brodcast = new Brodcaster();
@@ -27,6 +28,12 @@ public class Server{
 		list.add("Spike");
 		list.add("WTHR 13");
 		list.add("WISHTV 8");
+		
+		voteList = new VoteItem[list.getListSize()];
+		for(int i = 0; i < list.getListSize(); i++)
+		{
+			voteList[i] = list.get(i);
+		}
 		
 		voteT = new voteThread(list, brodcast);
 		voteT.start();

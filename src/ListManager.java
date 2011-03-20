@@ -20,6 +20,8 @@ public class ListManager {
 	
 	private final String FILE = "ListItems.txt";
 	private ArrayList<VoteItem> list;
+	private VoteItem alphaList[];
+	private VoteItem voteList[];
 	
 	/*
 	 * Initialized the ArrayList to be an empty list with space for 10 items.
@@ -77,12 +79,11 @@ public class ListManager {
 	 */
 	public boolean listSync() {
 		File f=new File(FILE);
-		String tmp;
+
 		try{
 			Scanner s=new Scanner(f);
 			//list=new ArrayList<VoteItem>();
 			while(s.hasNextLine()) {
-				tmp = s.nextLine();
 				list.add(new VoteItem(s.nextLine()));
 				System.out.println("here");
 			}
@@ -101,6 +102,9 @@ public class ListManager {
 	 * is no item already with the same name
 	 */
 	public boolean add(String s) {
+		alphaList = new VoteItem[list.size()+1];
+		voteList = new VoteItem[list.size()+1];
+		
 		try{
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE,true));
@@ -113,6 +117,9 @@ public class ListManager {
 		}
 		if(find(s) == -1)
 			list.add(new VoteItem(s));
+		
+		alphaMake();
+		voteMake();
 		return true;
 	}
 	
@@ -181,6 +188,55 @@ public class ListManager {
 			return true;
 		}
 		return false;
+	}
+	
+	private void alphaMake(){
+		VoteItem tmp;
+		
+		for(int i = 0; i < list.size(); i++){
+			alphaList[i] = list.get(i);
+		}
+		
+		for(int i = 0; i < list.size() - 1; i++){
+			for(int j = 0; j < list.size()- i - 1; j++){
+				if(alphaList[j].name.compareToIgnoreCase(alphaList[j+1].name) > 0)
+				{
+					tmp = alphaList[j];
+					alphaList[j] = alphaList[j+1];
+					alphaList[j+1] = tmp;
+				}
+			}
+		}
+	}
+	
+	private void voteMake(){
+		
+		for(int i = 0; i < list.size(); i++){
+			voteList[i] = list.get(i);
+		}
+	}
+	
+	public boolean sortVote(){
+		VoteItem tmp;
+		boolean changed = false;
+		for(int i = 0; i < list.size() - 1; i++){
+			for(int j = 0; j < list.size()- i - 1; j++){
+				if(voteList[j].vote < voteList[j+1].vote)
+				{
+					tmp = voteList[j];
+					voteList[j] = voteList[j+1];
+					voteList[j+1] = tmp;
+					changed = true;
+				}
+			}
+		}
+		return changed;
+	}
+	
+	public String getAlpha(int index){
+		Float votes = new Float(alphaList[index].vote);
+		System.out.println(alphaList[index].name + ":" + alphaList[index].vote);
+		return votes.toString();
 	}
 	
 }
