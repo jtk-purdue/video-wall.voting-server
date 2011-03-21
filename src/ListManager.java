@@ -19,6 +19,13 @@ import java.util.Scanner;
 public class ListManager {
 	
 	private final String FILE = "ListItems.txt";
+	
+	
+	/*
+	 * list holds the vote items, alphaList and voteList allow access in different orders without
+	 * interfering with any values
+	 */
+	
 	private ArrayList<VoteItem> list;
 	private VoteItem alphaList[];
 	private VoteItem voteList[];
@@ -26,6 +33,7 @@ public class ListManager {
 	/*
 	 * Initialized the ArrayList to be an empty list with space for 10 items.
 	 */
+	
 	public ListManager() {
 		list = new ArrayList<VoteItem>();
 		fileSync();
@@ -125,6 +133,7 @@ public class ListManager {
 	
 	/*
 	 * removes VoteItem with name s from the list
+	 * TODO: remove items from arrays as well as list
 	 */
 	public boolean remove(String s) {
 		int index=find(s);
@@ -190,6 +199,10 @@ public class ListManager {
 		return false;
 	}
 	
+	
+	/*
+	 * fills and sorts an array with pointers in alphabetical order
+	 */
 	private void alphaMake(){
 		VoteItem tmp;
 		
@@ -209,6 +222,11 @@ public class ListManager {
 		}
 	}
 	
+	/*
+	 * fills the array with all of the list items
+	 * note: not sorted here because the votes will all be zero when the array is created
+	 * and voteThread takes care of ensuring sorted order
+	 */
 	private void voteMake(){
 		
 		for(int i = 0; i < list.size(); i++){
@@ -216,6 +234,10 @@ public class ListManager {
 		}
 	}
 	
+	
+	/*
+	 * Sorts voteList in order of descending vote counts
+	 */
 	public boolean sortVote(){
 		VoteItem tmp;
 		boolean changed = false;
@@ -233,9 +255,11 @@ public class ListManager {
 		return changed;
 	}
 	
-	public String getAlpha(int index){
+	/*
+	 * returns String representation of the desired voteItems voteCount
+	 */
+	public String getAlphaVote(int index){
 		Float votes = new Float(alphaList[index].vote);
-		System.out.println(alphaList[index].name + ":" + alphaList[index].vote);
 		return votes.toString();
 	}
 	

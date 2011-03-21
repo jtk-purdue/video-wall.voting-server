@@ -59,7 +59,7 @@ public class Brodcaster {
 	
 	/*
 	 * sends a trigger to the specified url
-	 * NOTE: best used for testing on the creator
+	 * NOTE: best used for testing on the creator and not for videoWall
 	 */
 	void sendOne(URL url, String triggerNumber){
 		BrodcastThread b = new BrodcastThread(url, invokeEngine, triggerNumber);
