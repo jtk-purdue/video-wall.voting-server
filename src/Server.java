@@ -28,8 +28,8 @@ public class Server{
 		list.add("WISHTV 8");
 		
 		
-		//voteT = new voteThread(list, brodcast);
-		//voteT.start();
+		voteT = new voteThread(list, brodcast);
+		voteT.start();
 		
 		
 		/*

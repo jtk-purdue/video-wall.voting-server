@@ -100,8 +100,9 @@ class UserThread extends Thread {
 			 */
 			sendMessage("END");
 			list.vote(message[1]);
-			v.notify();
-			
+			synchronized(v){
+				v.notify();
+			}
 		}else if(message[0].equals("GETLIST")){
 			/*
 			 * sends the list of all names and vote counts

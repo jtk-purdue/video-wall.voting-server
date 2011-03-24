@@ -109,7 +109,7 @@ public class ListManager {
 	 * adds a VoteItem to the list with s as the name as long as there
 	 * is no item already with the same name
 	 */
-	public boolean add(String s) {
+	public synchronized boolean add(String s) {
 		alphaList = new VoteItem[list.size()+1];
 		voteList = new VoteItem[list.size()+1];
 		
@@ -190,7 +190,7 @@ public class ListManager {
 		return list.size();
 	}
 	
-	public boolean vote(String s) {
+	public synchronized boolean vote(String s) {
 		int index=find(s);
 		if(index!=-1) {
 			list.get(index).vote++;
@@ -205,7 +205,6 @@ public class ListManager {
 	 */
 	private void alphaMake(){
 		VoteItem tmp;
-		
 		for(int i = 0; i < list.size(); i++){
 			alphaList[i] = list.get(i);
 		}
@@ -260,11 +259,14 @@ public class ListManager {
 	 */
 	public String getAlphaVote(int index){
 		Float votes = new Float(alphaList[index].vote);
-		return votes.toString();
+		int iVote= Math.round(votes);
+		return iVote+"";
 	}
 	
-	public void decay(){
-		
+	public synchronized void decayAll(){
+		for(int i = 0; i < list.size(); i++){
+			list.get(i).vote *= .9;
+		}
 	}
 	
 }
