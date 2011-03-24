@@ -15,12 +15,14 @@ class UserThread extends Thread {
 	ThreadGroup children;
 	ListManager list;
 	Brodcaster brodcast;
+	voteThread v;
 	
-	UserThread(Socket connection, ServerSocket ss,ListManager list, Brodcaster brodcast){
+	UserThread(Socket connection, ServerSocket ss,ListManager list, Brodcaster brodcast, voteThread v){
 		this.connection = connection;
 		this.ss = ss;
 		this.list=list;
 		this.brodcast = brodcast;
+		this.v = v;
 	}
 	
 	public void run(){
@@ -98,6 +100,7 @@ class UserThread extends Thread {
 			 */
 			sendMessage("END");
 			list.vote(message[1]);
+			v.notify();
 			
 		}else if(message[0].equals("GETLIST")){
 			/*

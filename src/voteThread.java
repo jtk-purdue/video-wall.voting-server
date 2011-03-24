@@ -9,11 +9,18 @@ public class voteThread extends Thread {
 	public void run(){
 		boolean changed = false;
 		while(true){
-			if(changed){
-			 // TODO: do action if order changes
-				changed = false;
-			}
+				
 				changed = list.sortVote();
+				if(changed){
+					 // TODO: do action if order changes
+						changed = false;
+				}
+				
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			 // TODO: set-up decay algorithm
 			
 		}

@@ -263,4 +263,8 @@ public class ListManager {
 		return votes.toString();
 	}
 	
+	public void decay(){
+		
+	}
+	
 }
