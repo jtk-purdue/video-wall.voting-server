@@ -7,10 +7,12 @@ public class Server{
 	ListManager list;
 	Brodcaster brodcast;
 	voteThread voteT;
+	UpdateTracker lastUpdate;
 	
 	Server() {
 		list = new ListManager();
 		brodcast = new Brodcaster();
+		lastUpdate = new UpdateTracker();
 	}
 	void run()
 	{		
@@ -28,7 +30,7 @@ public class Server{
 		list.add("WISHTV 8");
 		
 		
-		voteT = new voteThread(list, brodcast);
+		voteT = new voteThread(list, brodcast, lastUpdate);
 		voteT.start();
 		
 		
@@ -41,7 +43,7 @@ public class Server{
 			
 			while(true){
 				connection = providerSocket.accept();
-				UserThread usr = new UserThread(connection, providerSocket,list, brodcast, voteT);
+				UserThread usr = new UserThread(connection, providerSocket,list, brodcast, voteT, lastUpdate);
 				usr.start();
 			}
 		}

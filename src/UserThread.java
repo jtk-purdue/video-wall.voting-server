@@ -16,13 +16,15 @@ class UserThread extends Thread {
 	ListManager list;
 	Brodcaster brodcast;
 	voteThread v;
+	UpdateTracker lastUpdate;
 	
-	UserThread(Socket connection, ServerSocket ss,ListManager list, Brodcaster brodcast, voteThread v){
+	UserThread(Socket connection, ServerSocket ss,ListManager list, Brodcaster brodcast, voteThread v, UpdateTracker lastUpdate){
 		this.connection = connection;
 		this.ss = ss;
 		this.list=list;
 		this.brodcast = brodcast;
 		this.v = v;
+		this.lastUpdate = lastUpdate;
 	}
 	
 	public void run(){
@@ -145,6 +147,18 @@ class UserThread extends Thread {
 			 */
 			alphaNumbers();
 			sendMessage("END");
+		}
+		else if(message[0].equals("JCHECKUPDATE")){
+			/*
+			 * returns "update" the number of votes has changed since time returns "none" otherwise
+			 * NOTE: only works with java based systems for now
+			 * NOTE: String 'time' should be obtained using the Java Date class and the 'toString' function
+			 * Syntax: "JCHECKUPDATE" <time> "END"
+			 */
+			if(lastUpdate.needUpdate(message[1]))
+				sendMessage("update");
+			else
+				sendMessage("none");
 		}
 		else {
 			//just ignores unrecognized commands
