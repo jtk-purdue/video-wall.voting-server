@@ -1,27 +1,24 @@
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 public class UpdateTracker {
-	Date lastUpdate;
+	Long lastUpdate;
 	
 	UpdateTracker(){
-		lastUpdate = new Date();
+		lastUpdate = Long.valueOf(System.currentTimeMillis());
 	}
 	
 	boolean needUpdate(String s){
 		//returns true if the phone needs to update their list;
-		SimpleDateFormat simp = new SimpleDateFormat();
-		Date last;
+		Long last;
 		try{
-			last = simp.parse(s);
-			return lastUpdate.after(last);
+			last = Long.valueOf(s);
+			System.out.println("System: "+lastUpdate+" Phone: "+last);
+			return ((lastUpdate - last) <= 1000);
 		}catch(Exception e){}
 		
-		return true;
+		return false;
 	}
 	
 	void update(){
-		lastUpdate = new Date();
+		lastUpdate = Long.valueOf(System.currentTimeMillis());
 	}
 }

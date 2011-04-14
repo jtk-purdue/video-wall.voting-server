@@ -18,6 +18,7 @@ public class voteThread extends Thread {
 				changed = list.sortVote();
 				if(changed){
 						changed = false;
+						brodcast.sendAll(list.getVote(0).trigger);
 				}
 				
 				try {

@@ -49,7 +49,7 @@ public class Brodcaster {
 	/*
 	 * used to send the same trigger number to all players simultaneously
 	 */
-	void sendAll(String triggerNumber)
+	public synchronized void sendAll(String triggerNumber)
 	{
 		for(int i = 0; i < 16; i++){
 			BrodcastThread b = new BrodcastThread(urls[i], invokeEngine, triggerNumber);
@@ -61,7 +61,7 @@ public class Brodcaster {
 	 * sends a trigger to the specified url
 	 * NOTE: best used for testing on the creator and not for videoWall
 	 */
-	void sendOne(URL url, String triggerNumber){
+	public synchronized void sendOne(URL url, String triggerNumber){
 		BrodcastThread b = new BrodcastThread(url, invokeEngine, triggerNumber);
 		b.start();
 	}

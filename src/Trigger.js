@@ -8,7 +8,7 @@ function fire(url, gpi_index)
 	try
 	{
 		var httpRequest = new XMLHttpRequest();
-		httpRequest.open(method, url, async);
+		httpRequest.open(method, url+gpi_index, async);
 		httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		httpRequest.send(send);
 	}

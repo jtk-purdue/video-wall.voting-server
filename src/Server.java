@@ -10,24 +10,21 @@ public class Server{
 	UpdateTracker lastUpdate;
 	
 	Server() {
-		list = new ListManager();
+		list = new ListManager(false);
 		brodcast = new Brodcaster();
 		lastUpdate = new UpdateTracker();
 	}
 	void run()
 	{		
-		list.add("Discovery");
-		list.add("Lifetime");
-		list.add("Fox News");
-		list.add("Comedy Central");
-		list.add("CNN");
-		list.add("History");
-		list.add("ESPN");
-		list.add("ESPN 2");
-		list.add("Big Ten Network");
-		list.add("Spike");
-		list.add("WTHR 13");
-		list.add("WISHTV 8");
+		list.add("Red","1");
+		list.add("Orange","2");
+		list.add("Green","3");
+		list.add("Blue","4");
+		list.add("Black","5");
+		list.add("Purple","6");
+		list.add("Brown", "7");
+		list.add("Grey", "8");
+		
 		
 		
 		voteT = new voteThread(list, brodcast, lastUpdate);

@@ -1,12 +1,24 @@
 Discovery
+0
 Lifetime
+1
 Fox News
+2
 Comedy Central
+3
 CNN
+4
 History
+5
 ESPN
+7
 ESPN 2
+6
 Big Ten Network
+8
 Spike
+9
 WTHR 13
+10
 WISHTV 8
+11

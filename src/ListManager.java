@@ -18,7 +18,8 @@ import java.util.Scanner;
 
 public class ListManager {
 	
-	private final String FILE = "ListItems.txt";
+	private static final String file = "ListItems.txt";
+	private static String readFile="ListItems.txt";
 	
 	
 	/*
@@ -34,29 +35,48 @@ public class ListManager {
 	 * Initialized the ArrayList to be an empty list with space for 10 items.
 	 */
 	
-	public ListManager() {
+	public ListManager(boolean readFromFile) {
 		list = new ArrayList<VoteItem>();
-		fileSync();
+		if(readFromFile)
+			listSync();
+		else {
+			fileSync();
+			checkEmpty();
+		}
 	}
 	
-	public ListManager(boolean readFromFile) {
-		System.out.println("reading from file");
-		list = new ArrayList<VoteItem>();
+	public ListManager(String fileName) {
+		readFile=fileName;
 		listSync();
+	}
+	
+	public void checkEmpty() {
+		if(list.size()==0) {
+			list.add(new VoteItem("Nothing to vote on!","0"));
+		}
 	}
 	
 	/*
 	 * Initializes the ArrayList with the items in the provided array
 	 * @param list
 	 */
-	public ListManager(VoteItem [] list) {
-		this.list = new ArrayList<VoteItem>(list.length);
+	public synchronized void add(VoteItem [] list) {
 		for(int i=0;i<list.length;i++){
 			if(list[i]!=null) {
-				this.list.add(list[i]);
+				if(find(list[i].name)==-1)
+					this.list.add(list[i]);
 			}
 		}
+		alphaList = new VoteItem[this.list.size()];
+		voteList = new VoteItem[this.list.size()];
 		fileSync();
+		alphaMake();
+		voteMake();
+	}
+	
+	public void setFileName(String fileName) {
+		readFile=fileName;
+		listSync();
 	}
 	
 	/*
@@ -65,9 +85,9 @@ public class ListManager {
 	 */
 	public boolean fileSync() {
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			for(int i=0;i<list.size();i++) {
-				writer.write(list.get(i).name);
+				writer.write(list.get(i).name + "\n" + list.get(i).trigger);
 				writer.newLine();
 			}
 			writer.close();
@@ -85,15 +105,15 @@ public class ListManager {
 	 * 
 	 * TODO: maybe find a better way of checking against list
 	 */
-	public boolean listSync() {
-		File f=new File(FILE);
+	public synchronized boolean listSync() {
+		File f=new File(readFile);
+		list=new ArrayList<VoteItem>();
 
 		try{
 			Scanner s=new Scanner(f);
 			//list=new ArrayList<VoteItem>();
 			while(s.hasNextLine()) {
-				list.add(new VoteItem(s.nextLine()));
-				System.out.println("here");
+				list.add(new VoteItem(s.nextLine(), s.nextLine()));
 			}
 			s.close();
 		}
@@ -101,6 +121,9 @@ public class ListManager {
 			System.out.println("error");
 			return false;
 		}
+		readFile="ListItems.txt";
+		fileSync();
+		checkEmpty();
 		return true;
 		
 	}
@@ -109,22 +132,24 @@ public class ListManager {
 	 * adds a VoteItem to the list with s as the name as long as there
 	 * is no item already with the same name
 	 */
-	public synchronized boolean add(String s) {
+	public synchronized boolean add(String s, String t) {
 		alphaList = new VoteItem[list.size()+1];
 		voteList = new VoteItem[list.size()+1];
 		
+		if(find(s) != -1)
+			return false;
+		
+		list.add(new VoteItem(s, t));
 		try{
 			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE,true));
-			writer.write(s);
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
+			writer.write(s + "\n" + t);
 			writer.newLine();
 			writer.close();
 		}
 		catch(IOException e) {
 			return false;
 		}
-		if(find(s) == -1)
-			list.add(new VoteItem(s));
 		
 		alphaMake();
 		voteMake();
@@ -135,14 +160,15 @@ public class ListManager {
 	 * removes VoteItem with name s from the list
 	 * TODO: remove items from arrays as well as list
 	 */
-	public boolean remove(String s) {
+	public synchronized boolean remove(String s) {
 		int index=find(s);
 		if(index!=-1) {
 			float temp=list.get(index).vote;
+			String trigger=list.get(index).trigger;
 			list.remove(index);
 			//if fileSync fails reset list
 			if(!fileSync()) {
-				VoteItem v=new VoteItem(s);
+				VoteItem v=new VoteItem(s, trigger);
 				v.vote=temp;
 				list.add(index, v);
 				return false;
@@ -263,10 +289,23 @@ public class ListManager {
 		return iVote+"";
 	}
 	
+	public VoteItem getVote(int i){
+		return voteList[i];
+	}
+	
 	public synchronized void decayAll(){
 		for(int i = 0; i < list.size(); i++){
 			list.get(i).vote *= .9;
 		}
+	}
+	
+	
+	public int nowPlayingIndex(){
+		for(int i=0; i< list.size(); i++){
+			if(voteList[0] == alphaList[i])
+				return i;
+		}
+		return -1;
 	}
 	
 }
