@@ -159,12 +159,19 @@ class UserThread extends Thread {
 				sendMessage("update");
 			else
 				sendMessage("none");
+			
+			sendMessage("END");
 		}
 		else if(message[0].equals("NOWPLAYING")){
 			/*returns the index of the item with the most votes in an alphabetical list
 			 * Syntax "NOWPLAYING" "END"
 			 */
 			sendMessage(list.nowPlayingIndex()+"");
+			sendMessage("END");
+		}
+		else if(message[0].equals("RESET")){
+			sendMessage("END");
+			list.clearVotes();
 		}
 		else {
 			//just ignores unrecognized commands

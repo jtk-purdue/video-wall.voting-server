@@ -16,14 +16,14 @@ public class Server{
 	}
 	void run()
 	{		
-		list.add("Red","1");
-		list.add("Orange","2");
-		list.add("Green","3");
-		list.add("Blue","4");
-		list.add("Black","5");
-		list.add("Purple","6");
-		list.add("Brown", "7");
-		list.add("Grey", "8");
+		list.add("CNN","1");
+		list.add("ESPN","2");
+		list.add("ABC","3");
+		list.add("Nickelodeon","4");
+		list.add("Comedy Central","5");
+		list.add("Sci Fi","6");
+		list.add("Weather Channel", "7");
+		list.add("National Geographic", "8");
 		
 		
 		
