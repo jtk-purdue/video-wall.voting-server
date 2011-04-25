@@ -20,7 +20,7 @@ public class ListManager {
 	
 	private static final String file = "ListItems.txt";
 	private static String readFile="ListItems.txt";
-	
+	private static String nothingString = "Nothing to vote on!";
 	
 	/*
 	 * list holds the vote items, alphaList and voteList allow access in different orders without
@@ -52,7 +52,7 @@ public class ListManager {
 	
 	public void checkEmpty() {
 		if(list.size()==0) {
-			list.add(new VoteItem("Nothing to vote on!","0"));
+			add(nothingString,"0");
 		}
 	}
 	
@@ -138,6 +138,12 @@ public class ListManager {
 		
 		if(find(s) != -1)
 			return false;
+		
+		if(list.size() == 1 && !s.equals(nothingString)){
+			if(find(nothingString)!= -1){
+				remove(nothingString);
+			}
+		}
 		
 		list.add(new VoteItem(s, t));
 		try{
