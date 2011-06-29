@@ -4,10 +4,12 @@ class VoteItem{
 	String name;
 	public float vote;
 	String trigger;
-	VoteItem(String n, String t)
+	String id;
+	VoteItem(String n, String t,String id)
 	{
 		name = n;
 		vote = 0;
 		trigger = t;
+		this.id = id;
 	}
 }

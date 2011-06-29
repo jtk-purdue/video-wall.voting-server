@@ -1,5 +1,7 @@
 
 public class UpdateTracker {
+	
+	//TODO: Keeps track of the last time an update to vote order occurred. Unnecessary with unbroken connection?
 	Long lastUpdate;
 	
 	UpdateTracker(){

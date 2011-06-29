@@ -5,11 +5,10 @@ public class voteThread extends Thread {
 	ListManager list;
 	Brodcaster brodcast;
 	long startTime = System.currentTimeMillis();
-	UpdateTracker lastUpdate;
-	voteThread(ListManager list, Brodcaster brodcast, UpdateTracker lastUpdate) {
+	voteThread(ListManager list, Brodcaster brodcast) {
 		this.list = list;
 		this.brodcast = brodcast;
-		this.lastUpdate = lastUpdate;
+
 	}
 	public void run(){
 		boolean changed = false;
@@ -24,7 +23,6 @@ public class voteThread extends Thread {
 				try {
 					synchronized(this){
 						wait(300000 - (System.currentTimeMillis() - startTime));
-						lastUpdate.update();
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();

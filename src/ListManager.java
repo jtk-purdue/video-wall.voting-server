@@ -52,7 +52,7 @@ public class ListManager {
 	
 	public void checkEmpty() {
 		if(list.size()==0) {
-			add(nothingString,"0");
+			add(nothingString,"0", "");
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class ListManager {
 		try{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			for(int i=0;i<list.size();i++) {
-				writer.write(list.get(i).name + "\n" + list.get(i).trigger);
+				writer.write(list.get(i).name + "\n" + list.get(i).trigger + "\n" + list.get(i).id);
 				writer.newLine();
 			}
 			writer.close();
@@ -113,7 +113,7 @@ public class ListManager {
 			Scanner s=new Scanner(f);
 			//list=new ArrayList<VoteItem>();
 			while(s.hasNextLine()) {
-				list.add(new VoteItem(s.nextLine(), s.nextLine()));
+				list.add(new VoteItem(s.nextLine(), s.nextLine(), s.nextLine()));
 			}
 			s.close();
 		}
@@ -132,7 +132,7 @@ public class ListManager {
 	 * adds a VoteItem to the list with s as the name as long as there
 	 * is no item already with the same name
 	 */
-	public synchronized boolean add(String s, String t) {
+	public synchronized boolean add(String s, String t, String i) {
 		alphaList = new VoteItem[list.size()+1];
 		voteList = new VoteItem[list.size()+1];
 		
@@ -145,7 +145,7 @@ public class ListManager {
 			}
 		}
 		
-		list.add(new VoteItem(s, t));
+		list.add(new VoteItem(s, t, i));
 		try{
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
@@ -171,10 +171,11 @@ public class ListManager {
 		if(index!=-1) {
 			float temp=list.get(index).vote;
 			String trigger=list.get(index).trigger;
+			String id = list.get(index).id;
 			list.remove(index);
 			//if fileSync fails reset list
 			if(!fileSync()) {
-				VoteItem v=new VoteItem(s, trigger);
+				VoteItem v=new VoteItem(s, trigger, id);
 				v.vote=temp;
 				list.add(index, v);
 				return false;
@@ -184,9 +185,9 @@ public class ListManager {
 		return false;
 	}
 	
-	public int find(String s) {
+	public int find(String id) {
 		for(int i=0;i<list.size();i++) {
-			if(list.get(i).name.equals(s)) {
+			if(list.get(i).id.equals(id)) {
 				return i;
 			}
 		}
