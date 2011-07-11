@@ -52,7 +52,7 @@ public class ListManager {
 	
 	public void checkEmpty() {
 		if(list.size()==0) {
-			add(nothingString,"0", "");
+			add(nothingString,"0", nothingString); 
 		}
 	}
 	
