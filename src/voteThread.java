@@ -17,28 +17,19 @@ public class voteThread extends Thread {
 				changed = list.sortVote();
 				if(changed){
 						changed = false;
-						brodcast.sendAll(list.getVote(0).trigger);
+						System.out.println("Sending trigger for item: "+ list.getVote(0).id);
+						//brodcast.sendAll(list.getVote(0).trigger);
 				}
 				
 				try {
 					synchronized(this){
-						wait(300000 - (System.currentTimeMillis() - startTime));
+						wait();
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				
-				if((System.currentTimeMillis() - startTime) >= 300000){
-					decay();
-				}
 			 // TODO: set-up decay algorithm
 			
 		}
-	}
-	
-	public void decay(){
-		//votes*.9 every 5 minutes
-		list.decayAll();
-		startTime = System.currentTimeMillis();
 	}
 }

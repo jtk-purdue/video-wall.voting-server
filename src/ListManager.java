@@ -223,15 +223,21 @@ public class ListManager {
 		return list.size();
 	}
 	
-	public synchronized boolean vote(String s) {
+	public synchronized boolean vote(String s, Float value) {
 		int index=find(s);
 		if(index!=-1) {
-			list.get(index).vote++;
+			list.get(index).vote+= value;
 			return true;
 		}
 		return false;
 	}
 	
+	public synchronized void unVote(String s, Float value){
+		int index=find(s);
+		if(index!=-1) {
+			list.get(index).vote-=value;
+		}
+	}
 	
 	/*
 	 * fills and sorts an array with pointers in alphabetical order

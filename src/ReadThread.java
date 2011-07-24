@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Calendar;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -17,8 +18,9 @@ public class ReadThread extends Thread {
 	SendBuffer buf;
 	WriteThread w;
 	Boolean isConnected;
+	Connection connection;
 
-	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected){
+	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected, Connection connection){
 		this.socket = socket;
 		this.ss = ss;
 		this.list = list;
@@ -27,7 +29,8 @@ public class ReadThread extends Thread {
 		this.buf = buf;
 		this.w = w;
 		this.isConnected = isConnected;
-
+		this.connection = connection;
+		
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
@@ -52,7 +55,9 @@ public class ReadThread extends Thread {
 					process(message);
 			}catch(NullPointerException e){
 				isConnected = false;
+				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
 				synchronized(w){
+					connection.clear();
 					w.isConnected = false;
 					w.notify();
 				}
@@ -72,9 +77,19 @@ public class ReadThread extends Thread {
 				w.notify();
 			}
 		} else if(command.equals("VOTE")){
-			String channelId = s.next();
-			Integer rank = new Integer(s.next());
-			list.vote(channelId);
+			Float rank = new Float(0);
+			String channelId = "";
+			try{
+				channelId = s.next();
+				rank = new Float(s.next());
+			}catch(NoSuchElementException e){
+				e.printStackTrace();
+			}
+			Float f = 1/rank;
+			System.out.println("vote val: "+f);
+			
+			connection.vote(channelId, rank);
+			//list.vote(channelId);
 			//TODO: Create single transferable voting system
 			synchronized(v){
 				v.notify();
