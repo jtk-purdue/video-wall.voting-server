@@ -34,7 +34,7 @@ public class WriteThread extends Thread{
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} 
 			}
 			synchronized(buf){
 				if(isConnected){

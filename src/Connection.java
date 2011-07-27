@@ -83,7 +83,6 @@ public class Connection {
 	}
 	
 	public void clear(){
-		//TODO: remove current connection from array of connections
 		String s;
 		Float f;
 		for(int i=0; i < votes.size(); i++){

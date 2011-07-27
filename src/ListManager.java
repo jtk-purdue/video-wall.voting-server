@@ -321,4 +321,24 @@ public class ListManager {
 		return -1;
 	}
 	
+	String[] getChannelCommand(int i){
+		VoteItem v = get(i);
+		String out[] = new String[4];
+		out[0] = "CHANNEL";
+		out[1] = v.id;
+		out[2] = getRank(v)+1+"";
+		out[3] = v.name;
+		
+		return out;
+	}
+	
+	int getRank(VoteItem v){
+		for(int i = 0; i < voteList.length; i++){
+			if(v.equals(voteList[i])){
+				return i;
+			}
+				
+		}
+		return -1;
+	}
 }

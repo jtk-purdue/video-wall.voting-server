@@ -71,7 +71,7 @@ public class ReadThread extends Thread {
 		String command = s.next();
 		if(command.equals("GETLIST")){
 			for(int i = 0; i < list.getListSize(); i++){
-				sendChannel(list.get(i));
+				sendChannel(i);
 			}
 			synchronized(w){
 				w.notify();
@@ -97,19 +97,15 @@ public class ReadThread extends Thread {
 		}
 	}
 	
-	void sendChannel(VoteItem vi){
+	void sendChannel(int i){
 		//CHANNEL <channel-id> <rank> <channel-name>
 		String output[];
-		output = new String[4];
-		output[0] = "CHANNEL";
-		output[1] = vi.id;
-		output[2] = vi.vote+"";
-		output[3] = vi.name;
+		output = list.getChannelCommand(i);
 		
 		String toSend = new String();
-		for(int i = 0; i < output.length; i++){
-			toSend += output[i];
-			if(i < output.length -1)
+		for(int j = 0; j < output.length; j++){
+			toSend += output[j];
+			if(j < output.length -1)
 				toSend += " ";
 		}
 		
