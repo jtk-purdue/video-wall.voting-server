@@ -100,10 +100,14 @@ public class ReadThread extends Thread {
 			String mode = "";
 			try{
 				mode = s.next();
-				if(mode.equals("ON"))
-					n.command(0);
-				else if(mode.equals("OFF"))
-					n.command(1);
+				int i = -1;
+				if(mode.equals("ON")){
+					i = 0;
+				}else if(mode.equals("OFF")){
+					i = 1;
+				}
+				if(i != -1)
+					n.command(i);
 			}catch(Exception e){
 				e.printStackTrace();
 			}

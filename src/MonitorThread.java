@@ -50,6 +50,7 @@ public class MonitorThread extends Thread{
 		this.powerStatusOut = powerStatusOut;
 		this.powerOn = powerOn;
 		this.powerOff = powerOff;
+		this.operation = operation;
 	}
 	
 	public void run(){
@@ -90,24 +91,21 @@ public class MonitorThread extends Thread{
 		char status=c[23];
 		
 		if(status == '1'){
-			System.out.println("power on");
+			//System.out.println("power is on");
 			return POWER_ON;
 		}else if(status == '2'){
-			System.out.println("power standby");
+			//System.out.println("power is standby");
 			return POWER_STANDBY;
 		}else if(status == '3'){
-			System.out.println("power suspend");
+			//System.out.println("power is suspend");
 			return POWER_SUSPEND;
 		}else{
-			System.out.println("power off");
+			//System.out.println("power is off");
 			return POWER_OFF;
 		}
 	}
 	
-	public void sendMessage(char c[]){
-		System.out.print("sending: ");
-		System.out.println(c);
-		
+	public void sendMessage(char c[]){		
 		out.print(c);
 		out.flush();
 	}
@@ -115,13 +113,8 @@ public class MonitorThread extends Thread{
 	public char[] getMessage(){
 		char c[] = new char[50];
 		int numChars;
-		System.out.println("waiting for response...");
 		try {
 			numChars = in.read(c);
-			for(int i=0; i < numChars;i++){
-				System.out.println(i+" "+Integer.toHexString((int)c[i]));
-			}
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
