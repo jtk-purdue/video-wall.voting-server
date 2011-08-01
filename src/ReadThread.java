@@ -19,8 +19,9 @@ public class ReadThread extends Thread {
 	WriteThread w;
 	Boolean isConnected;
 	Connection connection;
+	NecManager n;
 
-	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected, Connection connection){
+	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected, Connection connection, NecManager n){
 		this.socket = socket;
 		this.ss = ss;
 		this.list = list;
@@ -30,6 +31,7 @@ public class ReadThread extends Thread {
 		this.w = w;
 		this.isConnected = isConnected;
 		this.connection = connection;
+		this.n = n;
 		
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -93,6 +95,17 @@ public class ReadThread extends Thread {
 			//TODO: Create single transferable voting system
 			synchronized(v){
 				v.notify();
+			}
+		} else if(command.equals("POWER")){
+			String mode = "";
+			try{
+				mode = s.next();
+				if(mode.equals("ON"))
+					n.command(0);
+				else if(mode.equals("OFF"))
+					n.command(1);
+			}catch(Exception e){
+				e.printStackTrace();
 			}
 		}
 	}

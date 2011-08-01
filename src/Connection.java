@@ -15,22 +15,24 @@ public class Connection {
 	WriteThread write;
 	ReadThread read;
 	
+	NecManager n;
+	
 	ArrayList<String> votes;
 	
-	Connection(Socket socket, ServerSocket ss, ListManager list, voteThread v, Brodcaster broadcast){
+	Connection(Socket socket, ServerSocket ss, ListManager list, voteThread v, Brodcaster broadcast, NecManager n){
 		this.socket = socket;
 		this.ss = ss;
 		this.list = list;
 		this.v = v;
 		this.broadcast = broadcast;
-		
+		this.n = n;
 		isConnected = true;
 		
 		votes = new ArrayList<String>();
 		
 		buf = new SendBuffer();
 		write = new WriteThread(socket, ss, list, buf, isConnected);
-		read = new ReadThread(socket, ss, list, broadcast, v, buf, write, isConnected, this);
+		read = new ReadThread(socket, ss, list, broadcast, v, buf, write, isConnected, this, n);
 		
 		write.start();
 		read.start();
@@ -91,6 +93,9 @@ public class Connection {
 				f = new Float(1/(float)(i+1));
 				list.unVote(s, f);
 			}
+		}
+		synchronized(v){
+			v.notify();
 		}
 	}
 }

@@ -7,10 +7,12 @@ public class Server{
 	ListManager list;
 	Brodcaster brodcast;
 	voteThread v;
+	NecManager n;
 	
-	Server() {
+	Server(boolean isActive) {
 		list = new ListManager(false);
 		brodcast = new Brodcaster();
+		n = new NecManager(isActive);
 	}
 	void run()
 	{		
@@ -38,7 +40,7 @@ public class Server{
 			
 			while(true){
 				socket = ss.accept();
-				Connection connection = new Connection(socket, ss, list, v, brodcast);
+				Connection connection = new Connection(socket, ss, list, v, brodcast,n);
 				
 				//UserThread usr = new UserThread(socket, providerSocket,list, brodcast, voteT, lastUpdate);
 				//usr.start();
@@ -50,10 +52,12 @@ public class Server{
 	}
 	public static void main(String args[])
 	{
-		Server server = new Server();
-		while(true){
-			server.run();
-		}
+		Server server;
+		if(args.length > 0 && args[1].equals("active"))
+				server = new Server(true);
+		else
+				server =  new Server(false);
+		server.run();
 	}
 
 }
