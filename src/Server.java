@@ -53,7 +53,7 @@ public class Server{
 	public static void main(String args[])
 	{
 		Server server;
-		if(args.length > 0 && args[1].equals("active"))
+		if(args.length > 0 && args[0].equals("active"))
 				server = new Server(true);
 		else
 				server =  new Server(false);
