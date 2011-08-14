@@ -52,6 +52,7 @@ public class Server{
 	}
 	public static void main(String args[])
 	{
+		//java Server pwd=<PASSWORD> active=<TRUE/FALSE>
 		Server server;
 		if(args.length > 0 && args[0].equals("active"))
 				server = new Server(true);

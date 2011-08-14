@@ -72,7 +72,8 @@ public class Connection {
 					}
 				}
 			}
-			votes.add((int)(rank-1), id);
+			if(rank != -1)
+				votes.add((int)(rank-1), id);
 			for(int i=0; i < votes.size(); i++){
 				s = votes.get(i);
 				if(!s.equals("null")){
