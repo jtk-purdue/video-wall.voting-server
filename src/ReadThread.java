@@ -21,8 +21,10 @@ public class ReadThread extends Thread {
 	Boolean isConnected;
 	Connection connection;
 	NecManager n;
+	String password;
+	boolean isAdmin;
 
-	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected, Connection connection, NecManager n){
+	ReadThread(Socket socket, ServerSocket ss, ListManager list, Brodcaster broadcast, voteThread v, SendBuffer buf, WriteThread w, Boolean isConnected, Connection connection, NecManager n, String password){
 		this.socket = socket;
 		this.ss = ss;
 		this.list = list;
@@ -33,6 +35,9 @@ public class ReadThread extends Thread {
 		this.isConnected = isConnected;
 		this.connection = connection;
 		this.n = n;
+		
+		isAdmin = false;
+		this.password = password;
 		
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -50,10 +55,11 @@ public class ReadThread extends Thread {
 			try {
 				message = in.readLine();
 			} catch (IOException e) {
+				System.out.println("End at readThread line 58");
 				isConnected = false;
 				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
+				connection.clear();
 				synchronized(w){
-					connection.clear();
 					w.isConnected = false;
 					w.notify();
 				}
@@ -63,13 +69,14 @@ public class ReadThread extends Thread {
 				if(!message.equals(""))
 					process(message);
 			}catch(NullPointerException e){
+				System.out.println("End at readThread line 72");
 				isConnected = false;
 				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
 				synchronized(w){
-					connection.clear();
 					w.isConnected = false;
 					w.notify();
 				}
+				connection.clear();
 			}
 		}
 	}
@@ -103,24 +110,45 @@ public class ReadThread extends Thread {
 			synchronized(v){
 				v.notify();
 			}
-		} else if(command.equals("POWER")){
-			String mode = "";
-			try{
-				mode = s.next();
-				int i = -1;
-				if(mode.equals("ON")){
-					i = 0;
-				}else if(mode.equals("OFF")){
-					i = 1;
-				}
-				if(i != -1)
-					n.command(i);
-			}catch(Exception e){
-				e.printStackTrace();
+		}else if(command.equals("PASSWORD")){
+			String passTry = s.next();
+			String attempt="failed";
+			if(passTry.equals(password)){
+				this.isAdmin = true; 
+				attempt = "passed";
 			}
+			System.out.println("login attempt "+attempt);
+		}else if(command.equals("POWER")){
+			if(isAdmin){
+				String mode = "";
+				try{
+					mode = s.next();
+					int i = -1;
+					if(mode.equals("ON")){
+						i = 0;
+					}else if(mode.equals("OFF")){
+						i = 1;
+					}
+					if(i != -1)
+						n.command(i);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		} else if(command.equals("TESTING")){
+				adminCommands(s);
 		}
+		
 	}
 	
+	private void adminCommands(Scanner s) {
+		String command = s.next();
+		if(command.equals("threadcount")){
+			System.out.println("number of active threads: "+activeCount());;
+		}
+		
+	}
+
 	void sendChannel(int i){
 		//CHANNEL <channel-id> <rank> <channel-name>
 		String output[];

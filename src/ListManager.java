@@ -341,4 +341,12 @@ public class ListManager {
 		}
 		return -1;
 	}
+	
+	String[] getStringList(){
+		String s[] = new String[list.size()];
+		for(int i=0; i < list.size(); i++){
+			s[i] = voteList[i].id;
+		}
+		return s;
+	}
 }

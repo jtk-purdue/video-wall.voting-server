@@ -11,28 +11,32 @@ public class Connection {
 	Brodcaster broadcast;
 	Boolean isConnected;
 	
+	String password;
+	
 	SendBuffer buf;
 	WriteThread write;
 	ReadThread read;
 	
 	NecManager n;
+	ConnectionManager connections;
 	
 	ArrayList<String> votes;
 	
-	Connection(Socket socket, ServerSocket ss, ListManager list, voteThread v, Brodcaster broadcast, NecManager n){
+	Connection(Socket socket, ServerSocket ss, ListManager list, voteThread v, Brodcaster broadcast, NecManager n, String password, ConnectionManager connections){
 		this.socket = socket;
 		this.ss = ss;
 		this.list = list;
 		this.v = v;
 		this.broadcast = broadcast;
 		this.n = n;
+		this.connections = connections;
 		isConnected = true;
 		
 		votes = new ArrayList<String>();
 		
 		buf = new SendBuffer();
 		write = new WriteThread(socket, ss, list, buf, isConnected);
-		read = new ReadThread(socket, ss, list, broadcast, v, buf, write, isConnected, this, n);
+		read = new ReadThread(socket, ss, list, broadcast, v, buf, write, isConnected, this, n, password);
 		
 		write.start();
 		read.start();
@@ -98,5 +102,11 @@ public class Connection {
 		synchronized(v){
 			v.notify();
 		}
+		
+		connections.remove(this);
+	}
+	
+	public void test(){
+		System.out.println("connection test successful");
 	}
 }

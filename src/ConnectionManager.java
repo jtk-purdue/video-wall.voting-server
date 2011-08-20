@@ -4,6 +4,10 @@ import java.util.ArrayList;
 public class ConnectionManager {
 	ArrayList<Connection> array;
 	
+	ConnectionManager(){
+		array = new ArrayList<Connection>();
+	}
+	
 	synchronized void add(Connection c){
 		array.add(c);
 	}
@@ -28,7 +32,19 @@ public class ConnectionManager {
 		}
 	}
 	
-	synchronized void updateAll(){
+	synchronized void updateAll(String s){
+		WriteThread w;
+		Connection c;
+		SendBuffer b;
+		for(int i=0; i< array.size(); i++){
+			c = array.get(i);
+			w = c.write;
+			b = c.buf;
+			b.add(s);
+			synchronized(w){
+				w.notify();
+			}
+		}
 		
 	}
 }

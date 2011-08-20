@@ -8,11 +8,14 @@ public class Server{
 	Brodcaster brodcast;
 	voteThread v;
 	NecManager n;
+	String password;
+	ConnectionManager connections;
 	
-	Server(boolean isActive) {
+	Server(boolean isActive, String password) {
 		list = new ListManager(false);
 		brodcast = new Brodcaster();
 		n = new NecManager(isActive);
+		this.password = password;
 	}
 	void run()
 	{		
@@ -25,9 +28,9 @@ public class Server{
 		list.add("Weather Channel", "7", "weather");
 		list.add("National Geographic", "8","nationalGeographic");
 		
+		connections = new ConnectionManager();
 		
-		
-		v = new voteThread(list, brodcast);
+		v = new voteThread(list, brodcast, connections);
 		v.start();
 		
 		
@@ -40,8 +43,8 @@ public class Server{
 			
 			while(true){
 				socket = ss.accept();
-				Connection connection = new Connection(socket, ss, list, v, brodcast,n);
-				
+				Connection connection = new Connection(socket, ss, list, v, brodcast,n,password, connections);
+				connections.add(connection);
 				//UserThread usr = new UserThread(socket, providerSocket,list, brodcast, voteT, lastUpdate);
 				//usr.start();
 			}
@@ -54,10 +57,33 @@ public class Server{
 	{
 		//java Server pwd=<PASSWORD> active=<TRUE/FALSE>
 		Server server;
-		if(args.length > 0 && args[0].equals("active"))
-				server = new Server(true);
-		else
-				server =  new Server(false);
+		String password="boiler";
+		String s;
+		String s1;
+		String s2;
+		boolean mode = false;
+		int loc;
+		for(int i=0; i < args.length; i++){
+			s = args[i];
+			if(s.contains("=")){
+				loc = s.indexOf('=');
+				s1=s.substring(0, loc);
+				s2=s.substring(loc+1);
+				if(s1.equals("password")){
+					password = s2;
+					System.out.println("password is: "+s2);
+				}else if(s1.equals("mode")){
+					if(s2.equals("active")){
+						mode = true;
+					}
+					
+					System.out.println("mode is"+ s2);
+				}
+			}
+		}
+		
+		
+		server = new Server(mode, password);
 		server.run();
 	}
 
