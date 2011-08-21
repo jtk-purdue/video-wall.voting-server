@@ -36,7 +36,7 @@ public class ReadThread extends Thread {
 		this.connection = connection;
 		this.n = n;
 		
-		isAdmin = false;
+		isAdmin = true;
 		this.password = password;
 		
 		try {
