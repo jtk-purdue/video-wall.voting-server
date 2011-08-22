@@ -61,6 +61,15 @@ public class NecManager {
 			t42.run();
 			t43.run();
 			t44.run();
+			
+			String s;
+			if(operation == 0)
+				s = "Monitors turned on";
+			else if(operation == 1)
+				s = "Monitors turned off";
+			else
+				s = "Bad input to monitor controller";
+			System.out.println(s);
 		}else{
 			String s;
 			if(operation == 0)

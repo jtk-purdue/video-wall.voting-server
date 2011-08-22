@@ -72,8 +72,8 @@ public class Server{
 				if(s1.equals("password")){
 					password = s2;
 					System.out.println("password is: "+s2);
-				}else if(s1.equals("mode")){
-					if(s2.equals("active")){
+				}else if(s1.equals("active")){
+					if(s2.equals("TRUE")){
 						mode = true;
 					}
 					

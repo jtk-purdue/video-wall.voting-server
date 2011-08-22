@@ -69,7 +69,6 @@ public class ReadThread extends Thread {
 				if(!message.equals(""))
 					process(message);
 			}catch(NullPointerException e){
-				System.out.println("End at readThread line 72");
 				isConnected = false;
 				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
 				synchronized(w){
@@ -116,6 +115,9 @@ public class ReadThread extends Thread {
 			if(passTry.equals(password)){
 				this.isAdmin = true; 
 				attempt = "passed";
+				sendMessage("ADMINACCESS TRUE");
+			}else{
+				sendMessage("ADMINACCESS FALSE");
 			}
 			System.out.println("login attempt "+attempt);
 		}else if(command.equals("POWER")){
@@ -162,5 +164,12 @@ public class ReadThread extends Thread {
 		}
 		
 		buf.add(toSend);
+	}
+	
+	void sendMessage(String s){
+		buf.add(s);
+		synchronized(w){
+			w.notify();
+		}
 	}
 }
