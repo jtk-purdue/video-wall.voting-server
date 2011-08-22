@@ -42,25 +42,25 @@ public class NecManager {
 			MonitorThread t42 = new MonitorThread("128.10.131.37" ,operation);
 			MonitorThread t43 = new MonitorThread("128.10.131.38" ,operation);
 			MonitorThread t44 = new MonitorThread("128.10.131.39" ,operation);
-			t11.run();
-			t12.run();
-			t13.run();
-			t14.run();
+			t11.start();
+			t12.start();
+			t13.start();
+			t14.start();
 			
-			t21.run();
-			t22.run();
-			t23.run();
-			t24.run();
+			t21.start();
+			t22.start();
+			t23.start();
+			t24.start();
 			
-			t31.run();
-			t32.run();
-			t33.run();
-			t34.run();
+			t31.start();
+			t32.start();
+			t33.start();
+			t34.start();
 			
-			t41.run();
-			t42.run();
-			t43.run();
-			t44.run();
+			t41.start();
+			t42.start();
+			t43.start();
+			t44.start();
 			
 			String s;
 			if(operation == 0)
