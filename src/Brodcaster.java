@@ -15,7 +15,7 @@ public class Brodcaster {
 	Invocable invokeEngine;
 	
 	Brodcaster(){
-		urls = new URL[16];
+		urls = new URL[17];
 		try{
 			urls[0] = new URL("http://vw-player-r1c1:8009/maxidrivers/maxisoftgpi/fire?gpi=");
 			urls[1] = new URL("http://vw-player-r1c2:8009/maxidrivers/maxisoftgpi/fire?gpi=");
@@ -33,6 +33,7 @@ public class Brodcaster {
 			urls[13] = new URL("http://vw-player-r4c2:8009/maxidrivers/maxisoftgpi/fire?gpi=");
 			urls[14] = new URL("http://vw-player-r4c3:8009/maxidrivers/maxisoftgpi/fire?gpi=");
 			urls[15] = new URL("http://vw-player-r4c4:8009/maxidrivers/maxisoftgpi/fire?gpi=");
+			urls[16] = new URL("http://videowall:8009/maxidrivers/maxisoftgpi/fire?gpi=");
 		} catch(Exception e){}
 		
 		manager = new ScriptEngineManager();
@@ -51,7 +52,7 @@ public class Brodcaster {
 	 */
 	public synchronized void sendAll(String triggerNumber)
 	{
-		for(int i = 0; i < 16; i++){
+		for(int i = 0; i < urls.length; i++){
 			BrodcastThread b = new BrodcastThread(urls[i], invokeEngine, triggerNumber);
 			b.start();
 		}
