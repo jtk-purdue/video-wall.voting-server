@@ -1,3 +1,6 @@
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 
 
@@ -8,6 +11,7 @@ public class voteThread extends Thread {
 	ConnectionManager connections;
 	boolean isActive;
 	long waitTimeMillis;
+	URL myUrl;
 	
 	voteThread(ListManager list, Brodcaster brodcast, ConnectionManager connections, boolean isActive, int secondsToWait) {
 		this.list = list;
@@ -16,6 +20,12 @@ public class voteThread extends Thread {
 		this.isActive = isActive;
 		this.waitTimeMillis = secondsToWait * 1000;
 		lastChange = System.currentTimeMillis()- waitTimeMillis;
+		try {
+			myUrl = new URL("http://videowall:8009/maxidrivers/maxisoftgpi/fire?gpi=");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public void run(){
 		boolean changed = false;
@@ -42,7 +52,8 @@ public class voteThread extends Thread {
 				if(needToChange){
 					
 					if(isActive){
-						brodcast.sendAll(list.getVote(0).trigger);
+						System.out.println("Active: Sending trigger for: "+list.getVote(0));
+						brodcast.sendOne(myUrl, list.getVote(0).trigger);
 					}else{
 						System.out.println("Sending trigger for item: "+ list.getVote(0).id);
 					}
