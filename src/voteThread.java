@@ -7,13 +7,15 @@ public class voteThread extends Thread {
 	long lastChange;
 	ConnectionManager connections;
 	boolean isActive;
+	long waitTimeMillis;
 	
-	voteThread(ListManager list, Brodcaster brodcast, ConnectionManager connections, boolean isActive) {
+	voteThread(ListManager list, Brodcaster brodcast, ConnectionManager connections, boolean isActive, int secondsToWait) {
 		this.list = list;
 		this.brodcast = brodcast;
 		this.connections = connections;
 		this.isActive = isActive;
-		lastChange = System.currentTimeMillis()- 30000;
+		this.waitTimeMillis = secondsToWait * 1000;
+		lastChange = System.currentTimeMillis()- waitTimeMillis;
 	}
 	public void run(){
 		boolean changed = false;
@@ -36,7 +38,7 @@ public class voteThread extends Thread {
 				changed = false;
 			}
 			
-			if((System.currentTimeMillis() - lastChange) >= 30000){
+			if((System.currentTimeMillis() - lastChange) >= waitTimeMillis){
 				if(needToChange){
 					
 					if(isActive){
@@ -58,7 +60,7 @@ public class voteThread extends Thread {
 			} else {
 				synchronized(this){
 					try {
-						wait(30000 - (System.currentTimeMillis() - lastChange));
+						wait(waitTimeMillis - (System.currentTimeMillis() - lastChange));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

@@ -10,6 +10,7 @@ public class Server{
 	NecManager n;
 	String password;
 	ConnectionManager connections;
+	int secondsToWait;
 	boolean isActive;
 	
 	Server(boolean isActive, String password, int secondsToWait) {
@@ -18,6 +19,7 @@ public class Server{
 		n = new NecManager(isActive);
 		this.isActive = isActive;
 		this.password = password;
+		this.secondsToWait = secondsToWait;
 	}
 	void run()
 	{		
@@ -38,7 +40,7 @@ public class Server{
 		
 		connections = new ConnectionManager();
 		
-		v = new voteThread(list, brodcast, connections, isActive);
+		v = new voteThread(list, brodcast, connections, isActive, secondsToWait);
 		v.start();
 		
 		
