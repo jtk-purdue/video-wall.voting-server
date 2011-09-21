@@ -47,20 +47,22 @@ public class Server{
 		/*
 		 * Set up socket and loop through waiting for connections
 		 */
-		try{
-			ss = new ServerSocket(4242);
-			System.out.println("Waiting for connection");
-			
-			while(true){
-				socket = ss.accept();
-				Connection connection = new Connection(socket, ss, list, v, brodcast,n,password, connections);
-				connections.add(connection);
-				//UserThread usr = new UserThread(socket, providerSocket,list, brodcast, voteT, lastUpdate);
-				//usr.start();
+		while(true){
+			try{
+				ss = new ServerSocket(4242);
+				System.out.println("Waiting for connection");
+				
+				while(true){
+					socket = ss.accept();
+					Connection connection = new Connection(socket, ss, list, v, brodcast,n,password, connections);
+					connections.add(connection);
+					//UserThread usr = new UserThread(socket, providerSocket,list, brodcast, voteT, lastUpdate);
+					//usr.start();
+				}
 			}
-		}
-		catch(IOException ioException){
-			ioException.printStackTrace();
+			catch(IOException ioException){
+				ioException.printStackTrace();
+			}
 		}
 	}
 	public static void main(String args[])
@@ -103,6 +105,7 @@ public class Server{
 		
 		server = new Server(mode, password, secondsToWait);
 		server.run();
+		System.out.println("should never get here");
 	}
 
 }

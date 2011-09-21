@@ -52,7 +52,7 @@ public class voteThread extends Thread {
 				if(needToChange){
 					
 					if(isActive){
-						System.out.println("Active: Sending trigger for: "+list.getVote(0));
+						System.out.println("Active: Sending trigger for: "+list.getVote(0).name);
 						brodcast.sendOne(myUrl, list.getVote(0).trigger);
 					}else{
 						System.out.println("Sending trigger for item: "+ list.getVote(0).id);
