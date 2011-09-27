@@ -1,58 +1,44 @@
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
 
 public class Connection {
 	Socket socket;
-	ServerSocket ss;
-	ListManager list;
-	voteThread v;
-	Brodcaster broadcast;
 	Boolean isConnected;
-	
-	String password;
-	
+		
 	SendBuffer buf;
 	WriteThread write;
 	ReadThread read;
 	
-	NecManager n;
-	ConnectionManager connections;
-	
+	GlobalVars global;
+		
 	ArrayList<String> votes;
 	
-	Connection(Socket socket, ServerSocket ss, ListManager list, voteThread v, Brodcaster broadcast, NecManager n, String password, ConnectionManager connections){
-		this.socket = socket;
-		this.ss = ss;
-		this.list = list;
-		this.v = v;
-		this.broadcast = broadcast;
-		this.n = n;
-		this.connections = connections;
+	public Connection(Socket socket, GlobalVars global) {
 		isConnected = true;
 		
 		votes = new ArrayList<String>();
+		this.socket = socket;
+		this.global = global;
 		
 		buf = new SendBuffer();
-		write = new WriteThread(socket, ss, list, buf, isConnected);
-		read = new ReadThread(socket, ss, list, broadcast, v, buf, write, isConnected, this, n, password);
+		write = new WriteThread(socket, global, buf, isConnected);
+		read = new ReadThread(socket, global, buf, write, isConnected, this);
 		
 		write.start();
 		read.start();
-		
 	}
-	
+
 	public void vote(String id, Float rank){
 		int index;
 		Float f;
 		String s;
-		if(list.find(id) != -1){
+		if(global.list.find(id) != -1){
 			for(int i=0; i < votes.size(); i++){
 				s = votes.get(i);
 				if(!s.equals("null")){
 					f = new Float(1/(float)(i+1));
-					list.unVote(s, f);
+					global.list.unVote(s, f);
 				}
 			}
 			if(rank >= votes.size()){
@@ -82,7 +68,7 @@ public class Connection {
 				s = votes.get(i);
 				if(!s.equals("null")){
 					f = 1/((float)i+1);
-					list.vote(s, f);
+					global.list.vote(s, f);
 				}
 				
 			}
@@ -96,14 +82,14 @@ public class Connection {
 			s = votes.get(i);
 			if(!s.equals("null")){
 				f = new Float(1/(float)(i+1));
-				list.unVote(s, f);
+				global.list.unVote(s, f);
 			}
 		}
-		synchronized(v){
-			v.notify();
+		synchronized(global.v){
+			global.v.notify();
 		}
 		
-		connections.remove(this);
+		global.connections.remove(this);
 	}
 	
 	public void test(){

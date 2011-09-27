@@ -5,20 +5,12 @@ import java.net.URL;
 
 
 public class voteThread extends Thread {
-	ListManager list;
-	Brodcaster brodcast;
+	GlobalVars global;
 	long lastChange;
-	ConnectionManager connections;
-	boolean isActive;
 	long waitTimeMillis;
 	URL myUrl;
 	
-	voteThread(ListManager list, Brodcaster brodcast, ConnectionManager connections, boolean isActive, int secondsToWait) {
-		this.list = list;
-		this.brodcast = brodcast;
-		this.connections = connections;
-		this.isActive = isActive;
-		this.waitTimeMillis = secondsToWait * 1000;
+	voteThread() {
 		lastChange = System.currentTimeMillis()- waitTimeMillis;
 		try {
 			myUrl = new URL("http://videowall:8009/maxidrivers/maxisoftgpi/fire?gpi=");
@@ -27,18 +19,23 @@ public class voteThread extends Thread {
 			e.printStackTrace();
 		}
 	}
+	public void setGlobal(GlobalVars global){
+		this.global = global;
+		this.waitTimeMillis = this.global.secondsToWait * 1000;
+	}
+	
 	public void run(){
 		boolean changed = false;
 		boolean needToChange = false;
 		String first[];
 		String second[];
-		first = list.getStringList();
+		first = global.list.getStringList();
 		while(true){
 				
-			changed = list.sortVote();
+			changed = global.list.sortVote();
 			if(changed){
 				needToChange = true;
-				second = list.getStringList();
+				second = global.list.getStringList();
 				for(int i=0; i < second.length; i++){
 					if(!second[i].equals(first[i])){
 						sendRank(second[i], i);
@@ -51,11 +48,11 @@ public class voteThread extends Thread {
 			if((System.currentTimeMillis() - lastChange) >= waitTimeMillis){
 				if(needToChange){
 					
-					if(isActive){
-						System.out.println("Active: Sending trigger for: "+list.getVote(0).name);
-						brodcast.sendOne(myUrl, list.getVote(0).trigger);
+					if(global.isActive){
+						System.out.println("Active: Sending trigger for: "+global.list.getVote(0).name);
+						global.broadcast.sendOne(myUrl, global.list.getVote(0).trigger);
 					}else{
-						System.out.println("Sending trigger for item: "+ list.getVote(0).id);
+						System.out.println("Sending trigger for item: "+ global.list.getVote(0).id);
 					}
 					needToChange = false;
 					lastChange = System.currentTimeMillis();
@@ -82,6 +79,6 @@ public class voteThread extends Thread {
 	
 	void sendRank(String channelID, int rank){
 		String message = "RANK "+channelID+" "+(rank+1);
-		connections.updateAll(message);
+		global.connections.updateAll(message);
 	}
 }

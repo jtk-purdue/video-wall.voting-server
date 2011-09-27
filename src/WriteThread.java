@@ -1,20 +1,16 @@
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 
 public class WriteThread extends Thread{
 	Socket socket;
-	ServerSocket ss;
 	PrintWriter out;
-	ListManager list;
 	SendBuffer buf;
 	Boolean isConnected;
+	GlobalVars global;
 	
-	WriteThread(Socket socket, ServerSocket ss, ListManager list, SendBuffer buf, Boolean isConnected){
+	WriteThread(Socket socket, GlobalVars global, SendBuffer buf, Boolean isConnected){
 		this.socket = socket;
-		this.ss = ss;
-		this.list = list;
 		this.buf = buf;
 		this.isConnected = isConnected;
 		
@@ -32,7 +28,6 @@ public class WriteThread extends Thread{
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
 			}
@@ -42,7 +37,8 @@ public class WriteThread extends Thread{
 					for(int i = 0; i < size; i ++){
 						try {
 							sendStr = buf.pop();
-							System.out.println(sendStr);
+							if(sendStr.indexOf("RANK") != 0)
+								System.out.println(sendStr);
 							sendMessage(sendStr);
 						} catch (EmptyStackException e) {
 							e.printStackTrace();

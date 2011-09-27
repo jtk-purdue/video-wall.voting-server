@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Calendar;
 public class Server{
 	ServerSocket ss;
 	Socket socket = null;
@@ -12,6 +13,7 @@ public class Server{
 	ConnectionManager connections;
 	int secondsToWait;
 	boolean isActive;
+	GlobalVars global;
 	
 	Server(boolean isActive, String password, int secondsToWait) {
 		list = new ListManager(false);
@@ -39,22 +41,23 @@ public class Server{
 		list.add("Mixable", "5", "mixable");
 		
 		connections = new ConnectionManager();
-		
-		v = new voteThread(list, brodcast, connections, isActive, secondsToWait);
+		v = new voteThread();
+		global = new GlobalVars(ss, list, brodcast, v, n, password, connections, secondsToWait, isActive);
+		v.setGlobal(global);
 		v.start();
 		
 		
 		/*
 		 * Set up socket and loop through waiting for connections
 		 */
-		while(true){
 			try{
 				ss = new ServerSocket(4242);
+				ss.setReuseAddress(true);
 				System.out.println("Waiting for connection");
-				
 				while(true){
 					socket = ss.accept();
-					Connection connection = new Connection(socket, ss, list, v, brodcast,n,password, connections);
+					System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection initiated: Total connections = "+(((Thread.activeCount() - 2)/2)+1));
+					Connection connection = new Connection(socket, global);
 					connections.add(connection);
 					//UserThread usr = new UserThread(socket, providerSocket,list, brodcast, voteT, lastUpdate);
 					//usr.start();
@@ -63,7 +66,6 @@ public class Server{
 			catch(IOException ioException){
 				ioException.printStackTrace();
 			}
-		}
 	}
 	public static void main(String args[])
 	{
