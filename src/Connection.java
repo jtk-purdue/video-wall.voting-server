@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -18,7 +21,6 @@ public class Connection {
 		isConnected = true;
 		
 		votes = new ArrayList<String>();
-		this.socket = socket;
 		this.global = global;
 		
 		buf = new SendBuffer();

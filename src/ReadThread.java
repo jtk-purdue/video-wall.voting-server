@@ -41,13 +41,18 @@ public class ReadThread extends Thread {
 			try {
 				message = in.readLine();
 			} catch (IOException e) {
-				System.out.println("End at readThread line 58");
+				System.out.println("End at readThread 58");
 				isConnected = false;
 				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
 				connection.clear();
 				synchronized(w){
 					w.isConnected = false;
 					w.notify();
+				}
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			} 
 			
