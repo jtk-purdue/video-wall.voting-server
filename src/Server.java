@@ -14,14 +14,17 @@ public class Server{
 	int secondsToWait;
 	boolean isActive;
 	GlobalVars global;
+	MessagePoster messages;
+	String rssPath;
 	
-	Server(boolean isActive, String password, int secondsToWait) {
+	Server(boolean isActive, String password, int secondsToWait, String rssPath) {
 		list = new ListManager(false);
 		brodcast = new Brodcaster();
 		n = new NecManager(isActive);
 		this.isActive = isActive;
 		this.password = password;
 		this.secondsToWait = secondsToWait;
+		this.rssPath = rssPath;
 	}
 	void run()
 	{		
@@ -41,8 +44,10 @@ public class Server{
 		list.add("Mixable", "5", "mixable");
 		
 		connections = new ConnectionManager();
+		messages = new MessagePoster(rssPath, isActive);
+		
 		v = new voteThread();
-		global = new GlobalVars(ss, list, brodcast, v, n, password, connections, secondsToWait, isActive);
+		global = new GlobalVars(ss, list, brodcast, v, n, password, connections, secondsToWait, isActive, messages);
 		v.setGlobal(global);
 		v.start();
 		
@@ -72,6 +77,7 @@ public class Server{
 		//java Server pwd=<PASSWORD> active=<TRUE/FALSE>
 		Server server;
 		String password="boiler";
+		String rss = "lwsnvw.rss";
 		String s;
 		String s1;
 		String s2;
@@ -99,13 +105,20 @@ public class Server{
 					} catch (Exception e){
 						System.out.println("poorly formed wait command");
 					}
-					System.out.println("wait time is: "+ secondsToWait);
+					System.out.println("rss path is"+ rss);
+				}else if(s1.equals("rss")){
+					try{
+						rss = s2;
+					} catch (Exception e){
+						System.out.println("poorly formed rss command");
+					}
+					System.out.println("rss path is: "+ rss);
 				}
 			}
 		}
 		
 		
-		server = new Server(mode, password, secondsToWait);
+		server = new Server(mode, password, secondsToWait, rss);
 		server.run();
 		System.out.println("should never get here");
 	}

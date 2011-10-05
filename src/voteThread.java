@@ -79,6 +79,7 @@ public class voteThread extends Thread {
 	
 	void sendRank(String channelID, int rank){
 		String message = "RANK "+channelID+" "+(rank+1);
+		System.out.println(message);
 		global.connections.updateAll(message);
 	}
 }

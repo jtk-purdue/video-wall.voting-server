@@ -67,6 +67,11 @@ public class ReadThread extends Thread {
 					w.notify();
 				}
 				connection.clear();
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

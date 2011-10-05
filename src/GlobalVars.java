@@ -11,9 +11,10 @@ public class GlobalVars {
 	ConnectionManager connections;
 	int secondsToWait;
 	boolean isActive;
+	MessagePoster messages;
 	public GlobalVars(ServerSocket ss, ListManager list,
 			Brodcaster broadcast, voteThread v, NecManager n, String password,
-			ConnectionManager connections, int secondsToWait, boolean isActive) {
+			ConnectionManager connections, int secondsToWait, boolean isActive, MessagePoster messages) {
 		super();
 		this.ss = ss;
 		this.list = list;
@@ -24,6 +25,7 @@ public class GlobalVars {
 		this.connections = connections;
 		this.secondsToWait = secondsToWait;
 		this.isActive = isActive;
+		this.messages = messages;
 	}
 	
 }
