@@ -17,7 +17,7 @@ public class WriteThread extends Thread{
 		try{
 			out = new PrintWriter(socket.getOutputStream(), true);
 			out.flush();
-		}catch(Exception e){}
+		}catch(Exception e){e.printStackTrace();}
 	}
 	synchronized public void run(){
 		int size;

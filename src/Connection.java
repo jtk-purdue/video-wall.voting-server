@@ -97,4 +97,10 @@ public class Connection {
 	public void test(){
 		System.out.println("connection test successful");
 	}
+	
+	public boolean isConnected(){
+		if(write.socket.isConnected() && read.socket.isConnected())
+			return true;
+		return false;
+	}
 }

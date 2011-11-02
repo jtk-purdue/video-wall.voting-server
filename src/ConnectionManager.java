@@ -38,11 +38,15 @@ public class ConnectionManager {
 		SendBuffer b;
 		for(int i=0; i< array.size(); i++){
 			c = array.get(i);
-			w = c.write;
-			b = c.buf;
-			b.add(s);
-			synchronized(w){
-				w.notify();
+			if(c.isConnected()){
+				w = c.write;
+				b = c.buf;
+				b.add(s);
+				synchronized(w){
+					w.notify();
+				}
+			}else{
+				remove(c);
 			}
 		}
 		

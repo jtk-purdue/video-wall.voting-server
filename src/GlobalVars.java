@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 public class GlobalVars {
 	ServerSocket ss;
 	ListManager list;
-	Brodcaster broadcast;
+	Broadcaster broadcast;
 	voteThread v;
 	NecManager n;
 	String password;
@@ -13,7 +13,7 @@ public class GlobalVars {
 	boolean isActive;
 	MessagePoster messages;
 	public GlobalVars(ServerSocket ss, ListManager list,
-			Brodcaster broadcast, voteThread v, NecManager n, String password,
+			Broadcaster broadcast, voteThread v, NecManager n, String password,
 			ConnectionManager connections, int secondsToWait, boolean isActive, MessagePoster messages) {
 		super();
 		this.ss = ss;

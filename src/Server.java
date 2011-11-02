@@ -6,7 +6,7 @@ public class Server{
 	ServerSocket ss;
 	Socket socket = null;
 	ListManager list;
-	Brodcaster brodcast;
+	Broadcaster brodcast;
 	voteThread v;
 	NecManager n;
 	String password;
@@ -15,16 +15,16 @@ public class Server{
 	boolean isActive;
 	GlobalVars global;
 	MessagePoster messages;
-	String rssPath;
+	String filePath;
 	
-	Server(boolean isActive, String password, int secondsToWait, String rssPath) {
+	Server(boolean isActive, String password, int secondsToWait, String filePath) {
 		list = new ListManager(false);
-		brodcast = new Brodcaster();
+		brodcast = new Broadcaster();
 		n = new NecManager(isActive);
 		this.isActive = isActive;
 		this.password = password;
 		this.secondsToWait = secondsToWait;
-		this.rssPath = rssPath;
+		this.filePath = filePath;
 	}
 	void run()
 	{		
@@ -44,7 +44,7 @@ public class Server{
 		list.add("Mixable", "5", "mixable");
 		
 		connections = new ConnectionManager();
-		messages = new MessagePoster(rssPath, isActive);
+		messages = new MessagePoster(filePath, isActive);
 		
 		v = new voteThread();
 		global = new GlobalVars(ss, list, brodcast, v, n, password, connections, secondsToWait, isActive, messages);
@@ -77,7 +77,7 @@ public class Server{
 		//java Server pwd=<PASSWORD> active=<TRUE/FALSE>
 		Server server;
 		String password="boiler";
-		String rss = "lwsnvw.rss";
+		String fileLoc = "lawsonmsg.txt";
 		String s;
 		String s1;
 		String s2;
@@ -94,33 +94,32 @@ public class Server{
 					password = s2;
 					System.out.println("password is: "+s2);
 				}else if(s1.equals("active")){
-					if(s2.equals("TRUE")){
+					if(s2.equalsIgnoreCase("true")){
 						mode = true;
 					}
 					
-					System.out.println("mode is"+ s2);
+					System.out.println("mode is "+ mode);
 				}else if(s1.equals("wait")){
 					try{
 						secondsToWait = Integer.parseInt(s2);
 					} catch (Exception e){
 						System.out.println("poorly formed wait command");
 					}
-					System.out.println("rss path is"+ rss);
-				}else if(s1.equals("rss")){
+				}else if(s1.equals("mfile")){
 					try{
-						rss = s2;
+						fileLoc = s2;
 					} catch (Exception e){
-						System.out.println("poorly formed rss command");
+						System.out.println("poorly formed mfile command");
 					}
-					System.out.println("rss path is: "+ rss);
+					System.out.println("message file path is: "+ fileLoc);
 				}
 			}
 		}
 		
 		
-		server = new Server(mode, password, secondsToWait, rss);
+		server = new Server(mode, password, secondsToWait, fileLoc);
 		server.run();
-		System.out.println("should never get here");
+//		System.out.println("should never get here");
 	}
 
 }

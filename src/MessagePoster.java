@@ -13,11 +13,7 @@ import java.util.Set;
 public class MessagePoster {
 	private static final int CAPACITY = 5;
 	private static final int MAXCHARS = 120;
-	
-	private static final String ADDRESS = "pc.cs.purdue.edu";
-	private static final String RSSHEADER = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n<rss version=\"2.0\">\n<channel>\n\t<title>Lawson Videowall Posts</t><link>"+ADDRESS+"</link>\n\t<description>Posts to the Lawson Videowall at Purdue</description>";
-	private static final String RSSEND = "</channel></rss>";
-	
+		
 	Set<String> badWords;
 	List<Post> posts;
 	
@@ -28,12 +24,16 @@ public class MessagePoster {
 	MessagePoster(String filepath, boolean isActive){
 		this.filepath = filepath;
 		this.isActive = isActive;
+		String cuss;
 		posts = new ArrayList<Post>();
 		badWords = new HashSet<String>();
 		try {
 			Scanner s = new Scanner(new File("badwords.txt"));
 			while(s.hasNext()){
-				badWords.add(s.nextLine());
+				cuss = s.next();
+				if(cuss.endsWith("*"))
+					cuss = cuss.substring(0, cuss.length()-1);
+				badWords.add(cuss);
 			}
 		} catch (FileNotFoundException e) {e.printStackTrace();}
 	}
@@ -50,25 +50,27 @@ public class MessagePoster {
 	
 	void submit(String name, String message, long timestamp){
 		if(!isProfane(name) && !isProfane(message) && message.length() <= MAXCHARS){
-			Post p = new Post(name, message, ADDRESS, System.currentTimeMillis());
+			Post p = new Post(name, message, System.currentTimeMillis());
+			System.out.println("adding");
 			add(p);
 		}
 	}
 	
-	synchronized void add(Post p){
+	public synchronized void add(Post p){
 		if(posts.size() == CAPACITY)
 			posts.remove(CAPACITY - 1);
 		posts.add(0, p);
-		fullOutput = RSSHEADER;
-		for(int i=0; i < CAPACITY; i++){
-			fullOutput+=posts.get(i).rssEntry;
+		
+		fullOutput = "";
+		for(int i=0; i< posts.size(); i++){
+			fullOutput += posts.get(i).name+": "+posts.get(i).message+"\n";
 		}
-		fullOutput+=RSSEND;
 		if(isActive){
 			File f = new File(filepath);
 			try {
 				FileWriter out = new FileWriter(f);
 				out.write(fullOutput);
+				out.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -78,14 +80,12 @@ public class MessagePoster {
 	private class Post{
 		String name;
 		String message;
-		String rssEntry;
 		String date;
 		long timestamp;
 
-		public Post(String name, String message,String address,long timestamp){
+		public Post(String name, String message,long timestamp){
 			this.name = name;
 			this.message = message;
-			this.rssEntry = "\t<item>\n\t\t<title>"+this.name+"</title>\n\t\t<link>"+address+"</link>\n\t\t<description>"+this.name+" -- "+this.message+"</description>\n\t</item>";
 			this.timestamp = timestamp;
 			
 			Calendar c = Calendar.getInstance();

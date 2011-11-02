@@ -42,6 +42,7 @@ public class ReadThread extends Thread {
 				message = in.readLine();
 			} catch (IOException e) {
 				System.out.println("End at readThread 58");
+				e.printStackTrace();
 				isConnected = false;
 				System.out.println(Calendar.getInstance().getTime() +":"+socket.getInetAddress()+"--"+ "Connection terminated by client");
 				connection.clear();
@@ -93,7 +94,7 @@ public class ReadThread extends Thread {
 			try{
 				channelId = s.next();
 				rank = new Float(s.next());
-			}catch(NoSuchElementException e){}
+			}catch(NoSuchElementException e){e.printStackTrace();}
 			Float f = 1/rank;
 			System.out.println("vote val: "+f);
 			
@@ -106,7 +107,7 @@ public class ReadThread extends Thread {
 			String passTry ="";
 			try{
 				passTry = s.next();
-			}catch(NoSuchElementException e){}
+			}catch(NoSuchElementException e){e.printStackTrace();}
 			String attempt="failed";
 			if(passTry.equals(global.password)){
 				this.isAdmin = true; 
@@ -137,11 +138,24 @@ public class ReadThread extends Thread {
 			String value="";
 			try{
 				value = s.next();
-			}catch(Exception e){}
+			}catch(Exception e){e.printStackTrace();}
 			System.out.println("sending trigger value");
 			global.broadcast.sendAll(value);
 		} else if(command.equals("TESTING")){
 				adminCommands(s);
+		}else if(command.equals("MESSAGE")){
+			String name;
+			String post;
+			try{
+				name = s.next();
+				post="";
+				while(s.hasNext()){
+					post += s.next()+" ";
+				}
+				global.messages.submit(name, post, System.currentTimeMillis());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 	}

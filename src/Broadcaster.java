@@ -6,7 +6,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 
-public class Brodcaster {
+public class Broadcaster {
 	
 	URL urls[];
 	ScriptEngineManager manager;
@@ -14,7 +14,7 @@ public class Brodcaster {
 	FileReader reader;
 	Invocable invokeEngine;
 	
-	Brodcaster(){
+	Broadcaster(){
 		urls = new URL[17];
 		try{
 			urls[0] = new URL("http://vw-player-r1c1:8009/maxidrivers/maxisoftgpi/fire?gpi=");
@@ -44,7 +44,7 @@ public class Brodcaster {
 	    	reader = new FileReader("Trigger.js");
 	    	engine.eval(reader);
 	    	invokeEngine = (Invocable) engine;
-	    }catch(Exception e){}
+	    }catch(Exception e){e.printStackTrace();}
 	}
 	
 	/*
@@ -53,7 +53,7 @@ public class Brodcaster {
 	public synchronized void sendAll(String triggerNumber)
 	{
 		for(int i = 0; i < urls.length; i++){
-			BrodcastThread b = new BrodcastThread(urls[i], invokeEngine, triggerNumber);
+			BroadcastThread b = new BroadcastThread(urls[i], invokeEngine, triggerNumber);
 			b.start();
 		}
 	}
@@ -63,7 +63,7 @@ public class Brodcaster {
 	 * NOTE: best used for testing on the creator and not for videoWall
 	 */
 	public synchronized void sendOne(URL url, String triggerNumber){
-		BrodcastThread b = new BrodcastThread(url, invokeEngine, triggerNumber);
+		BroadcastThread b = new BroadcastThread(url, invokeEngine, triggerNumber);
 		b.start();
 	}
 	
