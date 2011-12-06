@@ -34,8 +34,12 @@ public class NecManager {
 		}
 	}
 	synchronized void oneScreen(String label, int operation){
-		String ip = ips.get(label.toLowerCase());
-		MonitorThread t = new MonitorThread(ip, operation);
+		if(ips.containsKey(label)){
+			String ip = ips.get(label.toLowerCase());
+			MonitorThread t = new MonitorThread(ip, operation);
+			t.start();
+		}
+		
 	}
 	synchronized void command(int operation){
 		//0 on
