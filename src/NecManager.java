@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class NecManager {
 
@@ -15,11 +18,26 @@ public class NecManager {
 	public final int GET_STATUS = 2;
 	boolean run;
 	
+	Map<String,String> ips;
+	
 	NecManager(boolean run){
 		this.run = run;
+		ips = new HashMap<String,String>();
+		int end = 24;
+		String label;
+		String ip;
+		for(int i=1; i < 5; i++){
+			for(int j=1; j < 5; j++){
+				ips.put("r"+i+"c"+j, "128.10.131."+end);
+				end++;
+			}
+		}
 	}
-	
-	void command(int operation){
+	synchronized void oneScreen(String label, int operation){
+		String ip = ips.get(label.toLowerCase());
+		MonitorThread t = new MonitorThread(ip, operation);
+	}
+	synchronized void command(int operation){
 		//0 on
 		//1 off
 		if(run){

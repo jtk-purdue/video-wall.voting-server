@@ -134,6 +134,25 @@ public class ReadThread extends Thread {
 					e.printStackTrace();
 				}
 			}
+		}else if(command.equals("POWERONE")){
+			if(isAdmin){
+				String mode = "";
+				String label="";
+				try{
+					label = s.next();
+					mode = s.next();
+					int i = -1;
+					if(mode.equals("ON")){
+						i = 0;
+					}else if(mode.equals("OFF")){
+						i = 1;
+					}
+					if(i != -1)
+						global.n.oneScreen(label, i);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}else if(command.equals("TRIGGER")){
 			String value="";
 			try{

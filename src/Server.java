@@ -37,11 +37,11 @@ public class Server{
 //		list.add("Weather Channel", "7", "weather");
 //		list.add("National Geographic", "8","nationalGeographic");
 		
-		list.add("CS Camp", "1", "cscamp");
-		list.add("Double Take", "2", "dblTake");
-		list.add("Hot Seat", "3", "hotSeat");
-		list.add("Jason Lestina", "4", "jason");
-		list.add("Mixable", "5", "mixable");
+		list.add("Video 1", "1", "vid1");
+		list.add("Video 2", "2", "vid2");
+		list.add("Video 3", "3", "vid3");
+		list.add("Video 4", "4", "vid4");
+		list.add("Video 5", "5", "vid4");
 		
 		connections = new ConnectionManager();
 		messages = new MessagePoster(filePath, isActive);
